@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PinoutMaster Pro - Pełna Baza 2026</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --card: #161b22;
+            --primary: #58a6ff;
+            --text: #c9d1d9;
+            --border: #30363d;
+            --accent: #238636;
+            --input-bg: #010409;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding-bottom: 50px;
+        }
+
+        header {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        #search {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .car-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+
+        .car-title {
+            background: rgba(88, 166, 255, 0.1);
+            padding: 15px 20px;
+            font-weight: bold;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pin-table { width: 100%; border-collapse: collapse; }
+        .pin-row { border-bottom: 1px solid var(--border); }
+        .pin-row:nth-child(even) { background: rgba(255,255,255,0.01); }
+        .pin-num {
+            width: 50px;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            background: rgba(0,0,0,0.2);
+            color: var(--accent);
+        }
+        .pin-desc { padding: 10px 20px; font-size: 0.9rem; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        <div style="font-size: 1.5rem; font-weight: bold;">Pinout<span style="color:var(--primary)">Master</span> Professional</div>
+        <input type="text" id="search" placeholder="Szukaj modelu, pinu lub funkcji..." onkeyup="filterData()">
+    </div>
+</header>
+
+<div class="container" id="app"></div>
+
+<script>
+    const database = [
+        {
+            model: "VW Golf IV / Passat B5 - Wtyczka Niebieska (T32)",
+            tags: "vw golf 4 iv passat b5 t32 blue niebieska",
+            pins: [
+                {n:1,d:"Zacisk 15 (Plus po zapłonie)"},{n:2,d:"Kontrolka zużycia klocków"},{n:3,d:"Prędkościomierz (Wyjście)"},{n:4,d:"Nieużywany"},{n:5,d:"Czujnik poziomu paliwa"},{n:6,d:"Airbag (Poduszka)"},{n:7,d:"Zacisk 31 (Masa elektroniki)"},{n:8,d:"Temperatura płynu chłodzącego"},{n:9,d:"Zacisk 31 (Masa)"},{n:10,d:"Ciśnienie oleju"},{n:11,d:"Obrotomierz (Sygnał)"},{n:12,d:"Kontrolka ładowania (Zacisk 61)"},{n:13,d:"Świece żarowe / Kontrolka CAT"},{n:14,d:"Przeciwmgielne tył"},{n:15,d:"Nieużywany"},{n:16,d:"Otwarta klapa tył (Sygnał)"},{n:17,d:"Światła drogowe (Długie)"},{n:18,d:"Kierunkowskaz lewy"},{n:19,d:"ABS (Sygnał)"},{n:20,d:"Podświetlenie (Zacisk 58b)"},{n:21,d:"Otwarte drzwi kierowcy"},{n:22,d:"Poziom płynu chłodzącego"},{n:23,d:"Zacisk 30 (Stały plus)"},{n:24,d:"Zacisk 31 (Masa)"},{n:25,d:"Linia K (Diagnostyka)"},{n:26,d:"Światła postojowe prawe"},{n:27,d:"Światła postojowe lewe"},{n:28,d:"Wejście prędkości (VSS)"},{n:29,d:"Poziom płynu hamulcowego"},{n:30,d:"S-Contact (Stacyjka)"},{n:31,d:"Pas bezpieczeństwa"},{n:32,d:"Nieużywany"}
+            ]
+        },
+        {
+            model: "BMW E46 - Wtyczka Czarna (X11175)",
+            tags: "bmw e46 x11175 black czarna",
+            pins: [
+                {n:1,d:"Masa (Zacisk 31)"},{n:2,d:"Czujnik paliwa (Pływak 1)"},{n:3,d:"Czujnik paliwa (Pływak 2)"},{n:4,d:"Zacisk 30 (Stały Plus)"},{n:5,d:"Zacisk 15 (Zapłon)"},{n:6,d:"Zacisk R (Radio)"},{n:7,d:"Przycisk BC (Komputer)"},{n:8,d:"Kasowanie serwisów"},{n:9,d:"Gong"},{n:10,d:"Przeciwmgielne tył"},{n:11,d:"Przeciwmgielne przód"},{n:12,d:"CAN Low"},{n:13,d:"CAN High"},{n:14,d:"K-Bus (Dane)"},{n:15,d:"Linia TXD"},{n:16,d:"Nieużywany"},{n:17,d:"Temp. zewnętrzna (Sygnał)"},{n:18,d:"Temp. zewnętrzna (Masa)"},{n:19,d:"Płyn hamulcowy"},{n:20,d:"Podświetlenie"},{n:21,d:"Poziom oleju"},{n:22,d:"Płyn chłodniczy"},{n:23,d:"Płyn spryskiwaczy"},{n:24,d:"Nieużywany"},{n:25,d:"VSS Out (Prędkość)"},{n:26,d:"Nieużywany"}
+            ]
+        },
+        {
+            model: "Fiat 126p (Maluch) - Złącze Licznika",
+            tags: "fiat 126p maluch prl",
+            pins: [
+                {n:1,d:"Kontrolka ładowania (Alternator/Prądnica)"},{n:2,d:"Kontrolka ciśnienia oleju"},{n:3,d:"Kontrolka świateł drogowych (Niebieska)"},{n:4,d:"Wskaźnik poziomu paliwa (Sygnał)"},{n:5,d:"Zasilanie +12V po zapłonie"},{n:6,d:"Masa (GND)"},{n:7,d:"Kontrolka rezerwy paliwa"},{n:8,d:"Kontrolka kierunkowskazów"}
+            ]
+        },
+        {
+            model: "BMW Serii 3 (G20/G21) - 18 Pin Live Cockpit",
+            tags: "bmw g20 g21 g05 x5",
+            pins: [
+                {n:1,d:"Masa (GND)"},{n:2,d:"Zasilanie stałe +12V"},{n:3,d:"Nieużywany"},{n:4,d:"Nieużywany"},{n:5,d:"Nieużywany"},{n:6,d:"Nieużywany"},{n:7,d:"Wake-up Signal (15WUP)"},{n:8,d:"Nieużywany"},{n:9,d:"Nieużywany"},{n:10,d:"Nieużywany"},{n:11,d:"Nieużywany"},{n:12,d:"Nieużywany"},{n:13,d:"Nieużywany"},{n:14,d:"Ethernet RX+"},{n:15,d:"Ethernet RX-"},{n:16,d:"Ethernet TX+"},{n:17,d:"Ethernet TX-"},{n:18,d:"CAN High (Body)"},{n:19,d:"CAN Low (Body)"}
+            ]
+        },
+        {
+            model: "FSO Polonez Caro / Atu",
+            tags: "fso polonez caro atu prl",
+            pins: [
+                {n:1,d:"Sygnał obrotomierza (z cewki)"},{n:2,d:"Wskaźnik temperatury płynu"},{n:3,d:"Wskaźnik poziomu paliwa"},{n:4,d:"Plus +12V po zapłonie"},{n:5,d:"Masa (GND)"},{n:6,d:"Kontrolka ssania"},{n:7,d:"Kontrolka świateł pozycyjnych"},{n:8,d:"Kontrolka świateł drogowych"},{n:9,d:"Kontrolka ciśnienia oleju"},{n:10,d:"Kontrolka ładowania"},{n:11,d:"Kontrolka hamulca ręcznego"},{n:12,d:"Kontrolka kierunkowskazów"}
+            ]
+        }
+    ];
+
+    function render() {
+        const app = document.getElementById('app');
+        app.innerHTML = database.map(car => `
+            <div class="car-card" data-tags="${car.tags.toLowerCase()} ${car.model.toLowerCase()}">
+                <div class="car-title">${car.model}</div>
+                <table class="pin-table">
+                    ${car.pins.map(p => `
+                        <tr class="pin-row">
+                            <td class="pin-num">${p.n}</td>
+                            <td class="pin-desc">${p.d}</td>
+                        </tr>
+                    `).join('')}
+                </table>
+            </div>
+        `).join('');
+    }
+
+    function filterData() {
+        const val = document.getElementById('search').value.toLowerCase();
+        document.querySelectorAll('.car-card').forEach(card => {
+            const tags = card.getAttribute('data-tags');
+            card.classList.toggle('hidden', !tags.includes(val));
+        });
+    }
+
+    render();
+</script>
+
+</body>
+</html>
