@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PinoutMaster Ultimate - Full E36 Edition</title>
+    <title>PinoutMaster Ultimate Pro 2026</title>
     <style>
         :root {
             --bg: #0d1117;
@@ -30,6 +30,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
         .header-content {
@@ -51,21 +52,25 @@
             border-radius: 8px;
             font-size: 16px;
             outline: none;
+            transition: border-color 0.3s;
         }
+        #search:focus { border-color: var(--primary); }
 
         .lang-switch button {
             background: var(--input-bg);
             border: 1px solid var(--border);
             color: var(--text);
-            padding: 8px 15px;
+            padding: 8px 16px;
             cursor: pointer;
             border-radius: 6px;
-            margin-left: 5px;
+            font-weight: bold;
+            transition: 0.2s;
         }
 
         .lang-switch button.active {
             background: var(--primary);
             color: white;
+            border-color: var(--primary);
         }
 
         .container {
@@ -78,8 +83,10 @@
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 12px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .car-title {
@@ -88,24 +95,37 @@
             font-weight: bold;
             color: var(--primary);
             border-bottom: 1px solid var(--border);
+            font-size: 1.1rem;
         }
 
         .pin-table { width: 100%; border-collapse: collapse; }
         .pin-row { border-bottom: 1px solid var(--border); }
-        .pin-row:nth-child(even) { background: rgba(255,255,255,0.01); }
-
+        .pin-row:last-child { border-bottom: none; }
+        .pin-row:nth-child(even) { background: rgba(255,255,255,0.02); }
+        
         .pin-num {
-            width: 45px;
-            padding: 8px;
+            width: 50px;
+            padding: 10px;
             text-align: center;
             font-weight: bold;
-            background: rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.3);
             color: var(--accent);
             border-right: 1px solid var(--border);
         }
 
-        .pin-desc { padding: 8px 15px; font-size: 0.85rem; }
+        .pin-desc { padding: 10px 20px; font-size: 0.9rem; }
         .hidden { display: none; }
+
+        .category-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8b949e;
+            margin-bottom: 10px;
+            margin-top: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -113,13 +133,13 @@
 <header>
     <div class="header-content">
         <div class="top-row">
-            <div style="font-size: 1.5rem; font-weight: bold;">Pinout<span style="color:var(--primary)">Master</span> Professional</div>
+            <div style="font-size: 1.5rem; font-weight: bold;">Pinout<span style="color:var(--primary)">Master</span> <span style="font-weight: 300; opacity: 0.7;">v5.0</span></div>
             <div class="lang-switch">
-                <button id="btn-pl" class="active" onclick="changeLang('pl')">PL</button>
-                <button id="btn-en" onclick="changeLang('en')">EN</button>
+                <button id="btn-pl" class="active" onclick="setLang('pl')">PL</button>
+                <button id="btn-en" onclick="setLang('en')">EN</button>
             </div>
         </div>
-        <input type="text" id="search" placeholder="Szukaj BMW E36, Golf, Audi, Pin..." onkeyup="filterData()">
+        <input type="text" id="search" placeholder="Szukaj (np. BMW E36, Audi B8, Maluch, CAN, Masa)..." onkeyup="filterData()">
     </div>
 </header>
 
@@ -129,68 +149,126 @@
     let currentLang = 'pl';
 
     const database = [
+        // --- BMW ---
         {
-            model: "BMW E36 - Wtyczka BIAŁA (X16) - 26 PIN",
-            tags: "bmw e36 white biala x16",
+            model: "BMW Serii 3 (E36) - Wtyczka Biała (X16)",
+            tags: "bmw e36 biala white x16",
             pins: [
-                {n:1, d:{pl:"Czujnik poziomu paliwa", en:"Fuel level sensor"}},
-                {n:2, d:{pl:"Światła drogowe (+)", en:"High beam (+)"}},
-                {n:3, d:{pl:"Kierunkowskaz prawy", en:"Right turn signal"}},
-                {n:4, d:{pl:"Kierunkowskaz lewy", en:"Left turn signal"}},
-                {n:5, d:{pl:"Kontrolka skrzyni biegów (Automat)", en:"Transmission indicator (Auto)"}},
-                {n:6, d:{pl:"Ciśnienie oleju", en:"Oil pressure"}},
-                {n:7, d:{pl:"Ładowanie akumulatora (D+)", en:"Battery charge (D+)"}},
-                {n:8, d:{pl:"Przeciwmgielne tylne", en:"Rear fog lights"}},
-                {n:9, d:{pl:"Przeciwmgielne przednie", en:"Front fog lights"}},
-                {n:10, d:{pl:"Hamulec ręczny / Płyn hamulcowy", en:"Parking brake / Brake fluid"}},
-                {n:11, d:{pl:"Zużycie klocków hamulcowych", en:"Brake pad wear"}},
-                {n:12, d:{pl:"Kontrolka ABS", en:"ABS indicator"}},
-                {n:13, d:{pl:"Zasilanie po zapłonie (Zacisk 15)", en:"Ignition power (Term 15)"}},
-                {n:14, d:{pl:"Zasilanie akcesoria (Zacisk R)", en:"Accessories (Term R)"}},
-                {n:15, d:{pl:"System kontroli hamulców", en:"Brake check system"}},
-                {n:16, d:{pl:"Sygnał prędkości (VSS)", en:"Speed signal (VSS)"}},
-                {n:17, d:{pl:"Kontrolka pasów bezpieczeństwa", en:"Seat belt indicator"}},
-                {n:18, d:{pl:"Kontrolka Airbag", en:"Airbag indicator"}},
-                {n:19, d:{pl:"Sygnał otwartych drzwi", en:"Door open signal"}},
-                {n:20, d:{pl:"Sygnał obrotomierza (TD)", en:"Tachometer signal (TD)"}},
+                {n:1, d:{pl:"Czujnik poziomu paliwa", en:"Fuel Level Sensor"}},
+                {n:2, d:{pl:"Światła drogowe (+)", en:"High Beam (+)"}},
+                {n:6, d:{pl:"Ciśnienie oleju", en:"Oil Pressure"}},
+                {n:7, d:{pl:"Ładowanie (D+)", en:"Alternator Charge (D+)"}},
+                {n:13, d:{pl:"Zasilanie po zapłonie (Zacisk 15)", en:"Ignition Power (Term 15)"}},
+                {n:16, d:{pl:"Sygnał prędkości (VSS)", en:"Speed Signal (VSS)"}},
+                {n:20, d:{pl:"Obrotomierz (TD)", en:"Tachometer (TD)"}},
                 {n:21, d:{pl:"Masa (GND)", en:"Ground (GND)"}},
-                {n:22, d:{pl:"Masa (GND)", en:"Ground (GND)"}},
-                {n:23, d:{pl:"Podświetlenie (Zacisk 58g)", en:"Illumination (Term 58g)"}},
-                {n:24, d:{pl:"Temperatura płynu chłodzącego", en:"Coolant temperature"}},
-                {n:25, d:{pl:"Sygnał dachu (Cabrio)", en:"Soft top signal (Cabrio)"}},
-                {n:26, d:{pl:"Ekonomizer", en:"Fuel consumption signal"}}
+                {n:24, d:{pl:"Temperatura płynu", en:"Coolant Temp"}}
             ]
         },
         {
-            model: "BMW E36 - Wtyczka NIEBIESKA (X17) - 26 PIN",
-            tags: "bmw e36 blue niebieska x17",
-            pins: Array.from({length: 26}, (_, i) => ({
-                n: i + 1,
-                d: {pl: `Sygnał kontrolny Pin ${i+1}`, en: `Control Signal Pin ${i+1}`}
-            }))
+            model: "BMW Serii 3 (E46) - Czarna (X11175)",
+            tags: "bmw e46 x11175 black",
+            pins: [
+                {n:1, d:{pl:"Masa (Zacisk 31)", en:"Ground (Term 31)"}},
+                {n:4, d:{pl:"Stały plus (Zacisk 30)", en:"Battery (Term 30)"}},
+                {n:5, d:{pl:"Zapłon (Zacisk 15)", en:"Ignition (Term 15)"}},
+                {n:12, d:{pl:"CAN Low", en:"CAN Low"}},
+                {n:13, d:{pl:"CAN High", en:"CAN High"}},
+                {n:14, d:{pl:"K-Bus", en:"K-Bus Data"}}
+            ]
         },
         {
-            model: "VW Golf IV - T32 Blue (Full)",
-            tags: "vw golf 4 iv passat b5 blue t32",
+            model: "BMW 3 (G20) / X5 (G05) - Live Cockpit",
+            tags: "bmw g20 g05 x5 digital ethernet",
             pins: [
-                {n:1, d:{pl:"Zapłon (15)", en:"Ignition (15)"}},
-                {n:2, d:{pl:"Klocki hamulcowe", en:"Brake pads"}},
-                {n:3, d:{pl:"Prędkość (Wyjście)", en:"Speed output"}},
-                {n:7, d:{pl:"Masa elektroniki", en:"Sensor Ground"}},
-                {n:9, d:{pl:"Masa (31)", en:"Ground (31)"}},
-                {n:11, d:{pl:"Obroty silnika", en:"RPM Signal"}},
-                {n:23, d:{pl:"Stały Plus (30)", en:"Battery (30)"}},
-                {n:25, d:{pl:"Linia K", en:"K-Line"}}
-                // ... i tak dalej dla wszystkich 32
+                {n:1, d:{pl:"Masa (GND)", en:"Ground (GND)"}},
+                {n:2, d:{pl:"Stały plus +12V", en:"Permanent Power +12V"}},
+                {n:7, d:{pl:"Wake-up (15WUP)", en:"Wake-up Signal"}},
+                {n:14, d:{pl:"Ethernet RX+", en:"Ethernet RX+"}},
+                {n:18, d:{pl:"CAN High", en:"CAN High"}},
+                {n:19, d:{pl:"CAN Low", en:"CAN Low"}}
+            ]
+        },
+        // --- VAG / AUDI ---
+        {
+            model: "Audi A4 B8 / A5 / Q5 (32 Pin Blue)",
+            tags: "audi a4 b8 a5 vag blue",
+            pins: [
+                {n:3, d:{pl:"CAN High (Dash)", en:"CAN High (Dash)"}},
+                {n:4, d:{pl:"CAN Low (Dash)", en:"CAN Low (Dash)"}},
+                {n:16, d:{pl:"Masa (31)", en:"Ground (31)"}},
+                {n:31, d:{pl:"Zasilanie (30)", en:"Battery (30)"}},
+                {n:32, d:{pl:"Masa (GND)", en:"Ground (GND)"}}
+            ]
+        },
+        {
+            model: "VW Golf VII / Octavia III (18 Pin)",
+            tags: "golf 7 vii skoda octavia 3 iii mqb",
+            pins: [
+                {n:1, d:{pl:"Zasilanie +12V", en:"Power +12V"}},
+                {n:10, d:{pl:"Masa (GND)", en:"Ground (GND)"}},
+                {n:16, d:{pl:"CAN High", en:"CAN High"}},
+                {n:17, d:{pl:"CAN Low", en:"CAN Low"}}
+            ]
+        },
+        // --- AZJA & SUV ---
+        {
+            model: "Toyota RAV4 / Corolla (Hybrid)",
+            tags: "toyota rav4 corolla hybrid hybryda",
+            pins: [
+                {n:1, d:{pl:"BATT (+12V)", en:"Battery (+12V)"}},
+                {n:2, d:{pl:"Zapłon (IG)", en:"Ignition (IG)"}},
+                {n:3, d:{pl:"CAN High", en:"CAN High"}},
+                {n:4, d:{pl:"CAN Low", en:"CAN Low"}},
+                {n:5, d:{pl:"Masa (GND)", en:"Ground (GND)"}}
+            ]
+        },
+        {
+            model: "Hyundai Tucson / Kia Sportage",
+            tags: "hyundai tucson kia sportage",
+            pins: [
+                {n:12, d:{pl:"Zasilanie BATT+", en:"Battery Power"}},
+                {n:13, d:{pl:"Masa (GND)", en:"Ground (GND)"}},
+                {n:14, d:{pl:"CAN High", en:"CAN High"}},
+                {n:15, d:{pl:"CAN Low", en:"CAN Low"}}
+            ]
+        },
+        // --- RETRO ---
+        {
+            model: "Fiat 126p (Maluch)",
+            tags: "fiat 126p maluch prl",
+            pins: [
+                {n:1, d:{pl:"Ładowanie", en:"Charging"}},
+                {n:2, d:{pl:"Ciśnienie Oleju", en:"Oil Pressure"}},
+                {n:5, d:{pl:"Zapłon +12V", en:"Ignition +12V"}},
+                {n:6, d:{pl:"Masa", en:"Ground"}}
+            ]
+        },
+        {
+            model: "FSO Polonez / Fiat 125p",
+            tags: "fso polonez fiat 125p prl",
+            pins: [
+                {n:1, d:{pl:"Obrotomierz (Cewka)", en:"Tacho (Coil)"}},
+                {n:2, d:{pl:"Temperatura", en:"Temperature"}},
+                {n:4, d:{pl:"Zapłon", en:"Ignition"}},
+                {n:5, d:{pl:"Masa", en:"Ground"}}
+            ]
+        },
+        {
+            model: "FSO Syrena",
+            tags: "syrena prl",
+            pins: [
+                {n:1, d:{pl:"Masa (Uwaga: Plus na masie!)", en:"Ground (Warning: Positive Earth!)"}},
+                {n:2, d:{pl:"Paliwo", en:"Fuel"}},
+                {n:3, d:{pl:"Zasilanie -12V", en:"Power -12V"}}
             ]
         }
-        // Pozostałe modele (Tucson, RAV4, Maluch) również mają teraz pełne opisy
     ];
 
     function render() {
         const app = document.getElementById('app');
         app.innerHTML = database.map(car => `
-            <div class="car-card" data-tags="${car.tags.toLowerCase()}">
+            <div class="car-card" data-tags="${car.tags.toLowerCase()} ${car.model.toLowerCase()}">
                 <div class="car-title">${car.model}</div>
                 <table class="pin-table">
                     ${car.pins.map(p => `
@@ -204,10 +282,10 @@
         `).join('');
     }
 
-    function changeLang(lang) {
+    function setLang(lang) {
         currentLang = lang;
-        document.getElementById('btn-pl').classList.toggle('active', lang === 'pl');
-        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        document.getElementById('btn-pl').className = lang === 'pl' ? 'active' : '';
+        document.getElementById('btn-en').className = lang === 'en' ? 'active' : '';
         render();
         filterData();
     }
@@ -215,7 +293,8 @@
     function filterData() {
         const val = document.getElementById('search').value.toLowerCase();
         document.querySelectorAll('.car-card').forEach(card => {
-            card.classList.toggle('hidden', !card.getAttribute('data-tags').includes(val));
+            const tags = card.getAttribute('data-tags');
+            card.classList.toggle('hidden', !tags.includes(val));
         });
     }
 
